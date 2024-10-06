@@ -8,6 +8,7 @@ The main function is:
       of Pascal's Triangle.
 """
 
+
 def pascal_triangle(n):
     """
     Generate Pascal's Triangle up to the nth row.
@@ -28,11 +29,10 @@ def pascal_triangle(n):
 
     triangle = [[1]]  # Initialize the triangle with the first row
 
-    # Build the triangle one row at a time
     for i in range(1, n):
         row = [1]  # Start each row with 1
-        # Compute the values for the middle of the row
         for j in range(1, i):
+            # Compute the values for the middle of the row
             row.append(triangle[i - 1][j - 1] + triangle[i - 1][j])
         row.append(1)  # End each row with 1
         triangle.append(row)
