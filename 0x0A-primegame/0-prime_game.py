@@ -1,34 +1,28 @@
 #!/usr/bin/python3
-
-def sieve(n):
-    """ Return a list of primes up to n using the Sieve of Eratosthenes. """
-    is_prime = [True] * (n + 1)
-    p = 2
-    while (p * p <= n):
-        if is_prime[p]:
-            for i in range(p * p, n + 1, p):
-                is_prime[i] = False
-        p += 1
-    return [p for p in range(2, n + 1) if is_prime[p]]
+"""Prime game module.
+"""
 
 
 def isWinner(x, nums):
-    """ Determine the winner of the prime game. """
-    maria_wins = 0
-    ben_wins = 0
-    max_n = max(nums)
-    primes = sieve(max_n)
-
-    for n in nums:
-        prime_count = len([p for p in primes if p <= n])
-        if prime_count % 2 == 1:  # Maria wins if the count of primes is odd
-            maria_wins += 1
-        else:  # Ben wins if the count of primes is even
-            ben_wins += 1
-
-    if maria_wins > ben_wins:
-        return "Maria"
-    elif ben_wins > maria_wins:
-        return "Ben"
-    else:
+    """Determines the winner of a prime game session with `x` rounds.
+    """
+    if x < 1 or not nums:
         return None
+    marias_wins, bens_wins = 0, 0
+    # generate primes with a limit of the maximum number in nums
+    n = max(nums)
+    primes = [True for _ in range(1, n + 1, 1)]
+    primes[0] = False
+    for i, is_prime in enumerate(primes, 1):
+        if i == 1 or not is_prime:
+            continue
+        for j in range(i + i, n + 1, i):
+            primes[j - 1] = False
+    # filter the number of primes less than n in nums for each round
+    for _, n in zip(range(x), nums):
+        primes_count = len(list(filter(lambda x: x, primes[0: n])))
+        bens_wins += primes_count % 2 == 0
+        marias_wins += primes_count % 2 == 1
+    if marias_wins == bens_wins:
+        return None
+    return 'Maria' if marias_wins > bens_wins else 'Ben'
